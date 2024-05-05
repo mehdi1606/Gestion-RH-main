@@ -84,4 +84,6 @@ import { CollaborateurComponent } from './Collaborateur/collaborateur.component'
   ],
 
 })
-export class PagesModule { }
+export class PagesModule {
+  static LoginComponent1: any;
+}
