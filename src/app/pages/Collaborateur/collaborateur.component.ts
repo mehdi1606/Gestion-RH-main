@@ -109,9 +109,7 @@ export class CollaborateurComponent {
     return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
-  generatePages(): number[] {
-    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
-  }
+ 
 
   getEntriesForPage() {
     // Calculate starting and ending index for entries on current page
