@@ -6,19 +6,16 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 
 import { UIModule } from '../../shared/ui/ui.module';
-import { LoginComponent } from './login/login.component';
+
 import { LoginComponent1 } from './login_v2/login_v2.component';
-import { Login2Component } from './login2/login2.component';
-import { SignupComponent } from './signup/signup.component';
-import { Register2Component } from './register2/register2.component';
-import { Recoverpwd2Component } from './recoverpwd2/recoverpwd2.component';
 
 import { AuthRoutingModule } from './auth-routing';
-import { PasswordresetComponent } from './passwordreset/passwordreset.component';
+
 
 @NgModule({
-  declarations: [LoginComponent,LoginComponent1,Login2Component, SignupComponent, PasswordresetComponent, Register2Component, Recoverpwd2Component],
+  declarations: [LoginComponent1],
   imports: [
+
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
@@ -26,7 +23,6 @@ import { PasswordresetComponent } from './passwordreset/passwordreset.component'
     UIModule,
     AuthRoutingModule,
     CarouselModule
-  ]
-
+  ],
 })
 export class AuthModule { }

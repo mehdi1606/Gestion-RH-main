@@ -55,7 +55,7 @@ export const MENU: MenuItem[] = [
         id: 4,
         label: 'Stagiares',
         icon: 'bx-user',
-        link: '/chat',
+        link: '/projects/list',
 
     },
     {
@@ -68,8 +68,39 @@ export const MENU: MenuItem[] = [
       id: 6,
       label: 'List notification',
       icon: 'bx-bell',
-      link: '/collaborateur',
+      link: '/notification',
   },
+  // {
+  //           id: 40,
+  //           label: 'MENUITEMS.PROJECTS.TEXT',
+  //           icon: 'bx-briefcase-alt-2',
+  //           subItems: [
+  //               {
+  //                   id: 41,
+  //                   label: 'MENUITEMS.PROJECTS.LIST.GRID',
+  //                   link: '/projects/grid',
+  //                   parentId: 40
+  //               },
+  //               {
+  //                   id: 42,
+  //                   label: 'MENUITEMS.PROJECTS.LIST.PROJECTLIST',
+  //                   link: '/projects/list',
+  //                   parentId: 40
+  //               },
+  //               {
+  //                   id: 43,
+  //                   label: 'MENUITEMS.PROJECTS.LIST.OVERVIEW',
+  //                   link: '/projects/overview',
+  //                   parentId: 40
+  //               },
+  //               {
+  //                   id: 44,
+  //                   label: 'MENUITEMS.PROJECTS.LIST.CREATE',
+  //                   link: '/projects/create',
+  //                   parentId: 40
+  //               }
+  //           ]
+  //       },
 //     {
 //         id: 13,
 //         label: 'MENUITEMS.ECOMMERCE.TEXT',
@@ -241,37 +272,7 @@ export const MENU: MenuItem[] = [
 //             },
 //         ]
 //     },
-//     {
-//         id: 40,
-//         label: 'MENUITEMS.PROJECTS.TEXT',
-//         icon: 'bx-briefcase-alt-2',
-//         subItems: [
-//             {
-//                 id: 41,
-//                 label: 'MENUITEMS.PROJECTS.LIST.GRID',
-//                 link: '/projects/grid',
-//                 parentId: 40
-//             },
-//             {
-//                 id: 42,
-//                 label: 'MENUITEMS.PROJECTS.LIST.PROJECTLIST',
-//                 link: '/projects/list',
-//                 parentId: 40
-//             },
-//             {
-//                 id: 43,
-//                 label: 'MENUITEMS.PROJECTS.LIST.OVERVIEW',
-//                 link: '/projects/overview',
-//                 parentId: 40
-//             },
-//             {
-//                 id: 44,
-//                 label: 'MENUITEMS.PROJECTS.LIST.CREATE',
-//                 link: '/projects/create',
-//                 parentId: 40
-//             }
-//         ]
-//     },
+//   
 //     {
 //         id: 45,
 //         label: 'MENUITEMS.TASKS.TEXT',

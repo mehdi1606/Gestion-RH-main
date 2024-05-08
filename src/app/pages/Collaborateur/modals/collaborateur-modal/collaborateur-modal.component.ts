@@ -24,7 +24,7 @@ export class CollaborateurModalComponent {
   }
 
   fetchCollaborateurDetails(collaborateurId: any) {
-    return axios.get(`http://localhost:8090/api/v1/Collaborateurs/${collaborateurId}`)
+    return axios.get(`https://gestionrh-0d9m.onrender.com/api/v1/Collaborateurs/${collaborateurId}`)
       .then(response => response.data)
       .catch(error => {
         throw error;

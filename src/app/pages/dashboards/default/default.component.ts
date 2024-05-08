@@ -5,6 +5,7 @@ import { BsModalService, BsModalRef, ModalDirective } from 'ngx-bootstrap/modal'
 import { EventService } from '../../../core/services/event.service';
 import { CalendarComponent } from '../../calendar/calendar.component';
 import { ConfigService } from '../../../core/services/config.service';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-default',
@@ -23,22 +24,24 @@ export class DefaultComponent implements OnInit {
     backdrop: true,
     ignoreBackdropClick: true
   };
-
+  currentUser: any;
+  username: any;
   isActive: string;
 
   @ViewChild('content') content;
   @ViewChild('center', { static: false }) center?: ModalDirective;
- 
-  constructor(private modalService: BsModalService, private configService: ConfigService, private eventService: EventService) {
+  Role: any;
+
+  constructor(private modalService: BsModalService, private configService: ConfigService, private eventService: EventService,private authService: AuthenticationService) {
   }
 
   ngOnInit() {
-   
+
     /**
      * horizontal-vertical layput set
      */
-    
-    
+
+
     const attribute = document.body.getAttribute('data-layout');
 
     this.isVisible = attribute;
@@ -57,7 +60,13 @@ export class DefaultComponent implements OnInit {
      * Fetches the data
      */
     this.fetchData();
-    
+    this.currentUser = this.authService.getAuthenticatedUser();
+    if (this.currentUser) {
+      this.username=this.currentUser.lastname +this.currentUser.firstname;
+      this.Role=this.currentUser.userRole;
+      // You can continue accessing other properties in a similar manner
+    }
+
   }
 
   ngAfterViewInit() {
@@ -135,6 +144,6 @@ export class DefaultComponent implements OnInit {
   changeLayout(layout: string) {
     this.eventService.broadcast('changeLayout', layout);
   }
- 
+
 
 }

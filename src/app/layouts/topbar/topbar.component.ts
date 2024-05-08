@@ -25,8 +25,8 @@ export class TopbarComponent implements OnInit {
   countryName:any;
   valueset:any;
 
-  constructor(@Inject(DOCUMENT) private document: any, private router: Router, private authService: AuthenticationService,
-              private authFackservice: AuthfakeauthenticationService,
+  constructor(@Inject(DOCUMENT) private document: any, private router: Router,
+              private authFackservice: AuthfakeauthenticationService,private authService: AuthenticationService,
               public languageService: LanguageService,
               public translate: TranslateService,
               public _cookiesService: CookieService) {
@@ -44,7 +44,8 @@ export class TopbarComponent implements OnInit {
 
   @Output() settingsButtonClicked = new EventEmitter();
   @Output() mobileMenuButtonClicked = new EventEmitter();
-
+    currentUser: any;
+    username: any;
   ngOnInit() {
     this.openMobileMenu = false;
     this.element = document.documentElement;
@@ -57,6 +58,12 @@ export class TopbarComponent implements OnInit {
     } else {
       this.flagvalue = val.map(element => element.flag);
     }
+
+    this.currentUser = this.authService.getAuthenticatedUser();
+    if (this.currentUser) {
+      this.username=this.currentUser.lastname +this.currentUser.firstname;
+      // You can continue accessing other properties in a similar manner
+    }
   }
 
     setLanguage(text: string, lang: string, flag: string) {
@@ -65,6 +72,12 @@ export class TopbarComponent implements OnInit {
       this.cookieValue = lang;
       this.languageService.setLanguage(lang);
     }
+
+
+
+
+
+
 
   /**
    * Toggles the right sidebar
@@ -85,12 +98,7 @@ export class TopbarComponent implements OnInit {
    * Logout the user
    */
   logout() {
-    if (environment.defaultauth === 'firebase') {
-      this.authService.logout();
-    } else {
-      this.authFackservice.logout();
-    }
-    this.router.navigate(['/account/login']);
+    this.authService.logout();
   }
 
   /**

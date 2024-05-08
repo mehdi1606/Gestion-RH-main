@@ -4,11 +4,11 @@
     <form>
       <h1>Login</h1>
       <div class="inputbox">
-        <input type="email" [(ngModel)]="emails"  name="emails" placeholder="Emails" required>
+        <input type="email" [(ngModel)]="email"   name="emails" placeholder="Emails" required>
         <label  >Email</label>
       </div>
       <div class="inputbox">
-        <input type="password" [(ngModel)]="passwords" name="passwords" placeholder="Passwords" required>
+        <input type="password" [(ngModel)]="password" name="passwords" placeholder="Passwords" required>
         <label >Password</label>
       </div>
 
@@ -20,7 +20,7 @@
 
       </div>
 
-      <button type="submit" (click)="loginUser()">Log in</button>
+      <button type="submit" (click)="login()">Log in</button>
 
     </form>
   </section>
