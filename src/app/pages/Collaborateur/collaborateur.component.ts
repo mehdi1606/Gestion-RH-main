@@ -41,16 +41,22 @@ export class CollaborateurComponent {
   ngOnInit(): void {
     this.fetchCollaborateurs();
 
+
   }
 
   fetchCollaborateurs(): void {
 
-    axios.get('https://gestionrh-0d9m.onrender.com/api/v1/Collaborateurs')
+    axios.get('http://localhost:8090/api/v1/Collaborateurs')
       .then(response => {
         console.log('API Response:', response.data); // Log the entire response
         this.collaborateurs = response.data;
         this.filteredCollaborateurs = this.collaborateurs.map(collaborateur => this.mapCollaborateur(collaborateur));
         this.totalPages = Math.ceil(this.collaborateurs.length / this.entriesPerPage);
+
+         // Set the total number of collaborators
+      this.totalCollaborateursCount = this.collaborateurs.length;
+        console.log('Total collaborators:', this.collaborateurs.length);
+        console.log('tootal:',  this.totalCollaborateursCount);
 
          // Set the total number of collaborators
       this.totalCollaborateursCount = this.collaborateurs.length;
@@ -103,6 +109,10 @@ export class CollaborateurComponent {
     return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
+  generatePages(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
+  }
+
   getEntriesForPage() {
     // Calculate starting and ending index for entries on current page
     const startIndex = (this.currentPage - 1) * this.entriesPerPage;
@@ -110,6 +120,7 @@ export class CollaborateurComponent {
     // Return entries for current page
     return this.collaborateurs.slice(startIndex, endIndex);
   }
+
 
   viewCollaborateur(collaborateur: any) {
     // Fetch detailed collaborateur data using collaborateur.Id
@@ -119,6 +130,7 @@ export class CollaborateurComponent {
      const detailedCollaborateur = response.data;
      this.refreshTable();
      // Function to format date
+
 
 
 
@@ -630,6 +642,7 @@ export class CollaborateurComponent {
       </style>
     </head>
 
+
         <div class="form-card">
           <div class="form-card-header">Information Personnelle</div>
           <div class="form-card-body">
@@ -664,6 +677,9 @@ export class CollaborateurComponent {
             <label for="date_naissance" class="form-label">Date de naissance:</label>
             <input id="date_naissance" type="date" class="form-control" placeholder="${collaborateur.DateNaissance.split('T')[0]}">
         </div>
+            <label for="date_naissance" class="form-label">Date de naissance:</label>
+            <input id="date_naissance" type="date" class="form-control" placeholder="${collaborateur.DateNaissance.split('T')[0]}">
+        </div>
           </div>
         </div>
         <div class="form-card">
@@ -693,6 +709,8 @@ export class CollaborateurComponent {
               <label for="date_entree" class="form-label">Date d'entrée:</label>
               <input id="date_entree" type="date" class="form-control" placeholder="Entrez la date d'entrée" value="${convertISODateToHTMLDate(collaborateur.DateEntree)}">
 
+              <input id="date_entree" type="date" class="form-control" placeholder="Entrez la date d'entrée" value="${convertISODateToHTMLDate(collaborateur.DateEntree)}">
+
             </div>
             <div>
               <label for="anciennete" class="form-label">Ancienneté:</label>
@@ -703,6 +721,7 @@ export class CollaborateurComponent {
       `,
       showCancelButton: true,
       focusConfirm: false,
+
 
       preConfirm: () => {
         // Retrieve input values and update collaborateur object
@@ -720,6 +739,12 @@ export class CollaborateurComponent {
     const fonction = (<HTMLInputElement>document.getElementById('fonction')).value;
     const date_entree = (<HTMLInputElement>document.getElementById('date_entree')).value;
     const ancienneté = (<HTMLInputElement>document.getElementById('anciennete')).value;
+    if (!nom || !prenom || !cin || !sexe || !nationalité || !age || !date_naissance ||
+      !categorie || !filiale || !type || !département || !fonction || !date_entree || !ancienneté) {
+      Swal.showValidationMessage('Veuillez remplir tous les champs.');
+      return false; // Prevent form submission if any field is empty
+  }
+
     if (!nom || !prenom || !cin || !sexe || !nationalité || !age || !date_naissance ||
       !categorie || !filiale || !type || !département || !fonction || !date_entree || !ancienneté) {
       Swal.showValidationMessage('Veuillez remplir tous les champs.');

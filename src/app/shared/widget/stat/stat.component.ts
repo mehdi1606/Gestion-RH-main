@@ -25,7 +25,7 @@ export class StatComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
   loadTotalCollaborateurs() {
-    axios.get('https://gestionrh-0d9m.onrender.com/api/v1/Collaborateurs')
+    axios.get('http://localhost:8090/api/v1/Collaborateurs')
       .then(response => {
         // Assuming the API returns an array of collaborators
         this.totalCollaborateurs = response.data.length;
