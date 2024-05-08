@@ -11,6 +11,7 @@ import listPlugin from '@fullcalendar/list';
 import { category, calendarEvents, createEventId } from './data';
 
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 @Component({
   selector: 'app-calendar',
@@ -68,21 +69,42 @@ export   class CalendarComponent implements OnInit {
   };
   currentEvents: EventApi[] = [];
 
-  ngOnInit(): void {
-    this.breadCrumbItems = [{ label: 'Skote' }, { label: 'Calendar', active: true }];
 
+
+  ngOnInit(): void {
+    this.breadCrumbItems = [{ label: 'Innovx' }, { label: 'Calendar', active: true }];
     this.formData = this.formBuilder.group({
       title: ['', [Validators.required]],
       category: ['', [Validators.required]],
     });
-
     this.formEditData = this.formBuilder.group({
       editTitle: ['', [Validators.required]],
       editCategory: [],
     });
-    this._fetchData();
-
+    this.fetchCollaborateurs(); // Fetch collaborateurs data
   }
+
+ // Function to fetch collaborateurs data
+
+ async fetchCollaborateurs() {
+  try {
+    const response = await axios.get('http://localhost:8090/api/v1/Collaborateurs');
+    const collaborateurs = response.data;
+    this.calendarOptions.initialEvents = collaborateurs.map(collaborateur => {
+      const { date_naissance, nom, prenom } = collaborateur;
+      // Assuming date_naissance is in ISO 8601 format (e.g., "1990-01-01T00:00:00.000Z")
+      const birthday = new Date(date_naissance);
+      return {
+        title: `${nom} ${prenom}'s Birthday`,
+        start: birthday.toISOString(),
+        allDay: true
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching collaborateurs data:', error);
+  }
+}
+
 
   /**
    * Event click modal show
@@ -103,7 +125,7 @@ export   class CalendarComponent implements OnInit {
    */
   handleEvents(events: EventApi[]) {
     this.currentEvents = events;
-  
+
   }
 
   constructor(

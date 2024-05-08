@@ -1,11 +1,11 @@
 c.custom-modal-dialog {
-  max-width: 800px; /* Taille maximale de la modale */
+  max-width: 1500px; /* Taille maximale de la modale */
 }
 
 /* Définissez la taille de la modale pour les écrans plus petits */
-@media (max-width: 768px) {
+@media (max-width: 2000px) {
   .custom-modal-dialog {
-      max-width: 90%; /* Taille maximale de la modale pour les écrans plus petits */
+      max-width: 2000px; /* Taille maximale de la modale pour les écrans plus petits */
   }
 }
 .table-responsive {
@@ -121,3 +121,7 @@ table.table td i {
 .space-right {
   margin-right: 10px; /* Adjust the value as needed */
 }
+@media (min-width: 1200px) {
+  .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+      max-width: 2000px;
+    } }

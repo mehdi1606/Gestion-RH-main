@@ -5,7 +5,7 @@ import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { Page404Component } from './page404/page404.component';
 import { Page500Component } from './page500/page500.component';
 import { LockscreenComponent } from './lockscreen/lockscreen.component';
-import { Login2Component } from '../account/auth/login2/login2.component';
+
 import { Lockscreen2Component } from './lockscreen2/lockscreen2.component';
 import { ConfirmmailComponent } from './confirmmail/confirmmail.component';
 import { Confirmmail2Component } from './confirmmail2/confirmmail2.component';
@@ -14,6 +14,7 @@ import { Verification2Component } from './verification2/verification2.component'
 import { SteptwoverificationComponent } from './steptwoverification/steptwoverification.component';
 import { Steptwoverification2Component } from './steptwoverification2/steptwoverification2.component';
 import { ComingsoonComponent } from './comingsoon/comingsoon.component';
+import { LoginComponent1 } from '../account/auth/login_v2/login_v2.component';
 
 const routes: Routes = [
     {
@@ -33,8 +34,8 @@ const routes: Routes = [
         component: Page500Component
     },
     {
-        path: 'login-2',
-        component: Login2Component
+        path: 'login',
+        component: LoginComponent1
     },
     {
         path: 'lock-screen-1',

@@ -1,52 +1,44 @@
-import { Component, OnInit, Input, EventEmitter, ViewChild, Output } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss']
 })
-
-/**
- * Projects-create component
- */
 export class CreateComponent implements OnInit {
+  selectedFiles: File[] = [];
 
   constructor() { }
-  // bread crumb items
-  breadCrumbItems: Array<{}>;
 
-  selected: any;
-  hidden: boolean;
-  files: File[] = [];
-  
-  @Input() fromDate: Date;
-  @Input() toDate: Date;
-  @Output() dateRangeSelected: EventEmitter<{}> = new EventEmitter();
+  ngOnInit() {}
 
-  @ViewChild('dp', { static: true }) datePicker: any;
-
-  ngOnInit() {
-    this.breadCrumbItems = [{ label: 'Projects' }, { label: 'Create New', active: true }];
-
-    this.selected = '';
-    this.hidden = true;
+  onRemove(index: number) {
+    this.selectedFiles.splice(index, 1);
   }
 
-    // File Upload
-    imageURL: any;
-    onSelect(event: any) {
-      this.files.push(...event.addedFiles);
-      let file: File = event.addedFiles[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imageURL = reader.result as string;
-        setTimeout(() => {
-          // this.profile.push(this.imageURL)
-        }, 100);
-      }
-      reader.readAsDataURL(file)
-    }
+  // File Upload
+  imageURL: any;
 
- 
+  onSelect(event: any) {
+    this.selectedFiles.push(...event.addedFiles);
+    // Handle file reading/display logic here if necessary
+  }
+
+  selectImage() {
+    const inputElement = document.getElementById('project-image-input') as HTMLInputElement;
+    inputElement.click();
+  }
+
+  displayImage(event: any) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.files && inputElement.files[0]) {
+      const reader = new FileReader();
+  
+      reader.onload = (e: any) => {
+        this.imageURL = e.target.result;
+      };
+  
+      reader.readAsDataURL(inputElement.files[0]);
+    }
+  }
 }

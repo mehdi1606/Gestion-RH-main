@@ -9,22 +9,7 @@ const routes: Routes = [
         path: 'default',
         component: DefaultComponent
     },
-    // {
-    //     path: 'saas',
-    //     component: SaasComponent
-    // },
-    // {
-    //     path: 'crypto',
-    //     component: CryptoComponent
-    // },
-    // {
-    //     path: 'blog',
-    //     component: BlogComponent
-    // },
-    // {
-    //     path:"jobs",
-    //     component:JobsComponent
-    // }
+  
 ];
 
 @NgModule({

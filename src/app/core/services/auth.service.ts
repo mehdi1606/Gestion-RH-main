@@ -1,64 +1,66 @@
+// src/app/services/authentication.service.ts
+import axios from 'axios';
 import { Injectable } from '@angular/core';
-import { getFirebaseBackend } from '../../authUtils';
-import { User } from '../models/auth.models';
-
-@Injectable({ providedIn: 'root' })
+import { ActivatedRoute, Router } from '@angular/router';
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthenticationService {
+  private baseUrl = 'http://localhost:8090/api/v1/auth';  // Adjust this URL to your backend
 
-    constructor() {}
+  constructor(private router: Router,private activatedRoute: ActivatedRoute) {}
 
-    /**
-     * Returns the current user
-     */
-    public currentUser(): User {
-        return getFirebaseBackend().getAuthenticatedUser();
-    }
 
-    /**
-     * Performs the login
-     * @param email email of user
-     * @param password password of user
-     */
-    async login(email: string, password: string): Promise<User> {
-        try {
-            const response = await getFirebaseBackend().loginUser(email, password);
-            return response;
-        } catch (error) {
-            throw new Error('Login failed: ' + error.message);
-        }
-    }
+  registerUser(email: string, password: string): Promise<any> {
+    return axios.post(`${this.baseUrl}/register`, { email, password })
+      .then(response => response.data)
+      .catch(this.handleError);
+  }
 
-    /**
-     * Performs the register
-     * @param email email
-     * @param password password
-     */
-    async register(email: string, password: string): Promise<User> {
-        try {
-            const response = await getFirebaseBackend().registerUser(email, password);
-            return response;
-        } catch (error) {
-            throw new Error('Registration failed: ' + error.message);
-        }
-    }
 
-    /**
-     * Reset password
-     * @param email email
-     */
-    async resetPassword(email: string): Promise<string> {
-        try {
-            const response = await getFirebaseBackend().forgetPassword(email);
-            return response.data; // Assuming response.data contains the message
-        } catch (error) {
-            throw new Error('Password reset failed: ' + error.message);
-        }
-    }
+// AuthenticationService
+loginUser(email: string, password: string): Promise<any> {
+  console.log("email",email);
+  console.log("password",password);
+  return axios.post(`${this.baseUrl}/login`, { email, password })
+    .then(response => {
+      sessionStorage.setItem('authUser', JSON.stringify(response.data));
+      this.router.navigate(['/dashboard'], { relativeTo: this.activatedRoute });
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Login failed:', error.response || error.message || error);
+      throw error;  // Rethrow the error so it can be caught in the component
+    });
+}
 
-    /**
-     * Logout the user
-     */
-    logout() {
-        getFirebaseBackend().logout();
-    }
+
+  forgetPassword(email: string): Promise<any> {
+    return axios.post(`${this.baseUrl}/forget-password`, { email })
+      .then(response => response.data)
+      .catch(this.handleError);
+  }
+
+  logout(): void{
+
+        sessionStorage.removeItem('authUser');
+        console.log("authUser", sessionStorage.removeItem('authUser'));
+        this.router.navigate(['/account/login'], { relativeTo: this.activatedRoute });
+
+  }
+
+  getAuthenticatedUser(): any {
+    const user = sessionStorage.getItem('authUser');
+    return user ? JSON.parse(user) : null;
+  }
+
+  isLoggedIn(): boolean {
+    return this.getAuthenticatedUser() !== null;
+  }
+
+
+  private handleError(error: any): Promise<never> {
+    console.error('An error occurred:', error.response || error.message || error);
+    return Promise.reject(error.response?.data?.message || error.message || "An unknown error occurred");
+  }
 }

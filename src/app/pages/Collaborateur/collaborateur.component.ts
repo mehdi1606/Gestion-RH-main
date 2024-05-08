@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import axios from 'axios';
 
@@ -12,11 +12,13 @@ import Swal from 'sweetalert2';
 
 })
 export class CollaborateurComponent {
+  totalCollaborateursCount: number = 0;
   isVisible = false;
+  entriesPerPage = 20; // Display 20 collaborators per page
   collaborateurs: any[] = [];
   filteredCollaborateurs: any[] = [];
   currentPage = 1;
-  entriesPerPage = 5; // Adjust the number of entries per page as needed
+// Adjust the number of entries per page as needed
   totalPages = 0;
   selectedCollaborateur: any;
 
@@ -38,14 +40,22 @@ export class CollaborateurComponent {
 
   ngOnInit(): void {
     this.fetchCollaborateurs();
+    
   }
 
   fetchCollaborateurs(): void {
+    
     axios.get('http://localhost:8090/api/v1/Collaborateurs')
       .then(response => {
+        console.log('API Response:', response.data); // Log the entire response
         this.collaborateurs = response.data;
         this.filteredCollaborateurs = this.collaborateurs.map(collaborateur => this.mapCollaborateur(collaborateur));
         this.totalPages = Math.ceil(this.collaborateurs.length / this.entriesPerPage);
+        
+         // Set the total number of collaborators
+      this.totalCollaborateursCount = this.collaborateurs.length;
+        console.log('Total collaborators:', this.collaborateurs.length);
+        console.log('tootal:',  this.totalCollaborateursCount);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -72,39 +82,8 @@ export class CollaborateurComponent {
     };
   }
 
-  formatDate(dateString: string): string {
-    
- 
-    // Extract the date part from the ISO string and return
- 
-    // Check if the input string matches the format "yyyy-MM-dd HH:mm:ss"
-    const regexISO8601 = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
-    if (regexISO8601.test(dateString)) {
-        const date = new Date(dateString);
-        return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
-    }
-
-    // Check if the input string matches the format "Day Mon DD HH:mm:ss TZO YYYY"
-    const regexJSDate = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{2}) (\d{2}:\d{2}:\d{2}) (\w{3}) (\d{4})$/;
-    if (regexJSDate.test(dateString)) {
-        const [, , month, day, , ,year] = dateString.match(regexJSDate);
-        const formattedDate = `${year}-${this.getMonthNumber(month)}-${day}`;
-        return formattedDate;
-    }
-
-    // If neither format matches, return an empty string or handle accordingly
-    return dateString.split('T')[0];
-}
 
 
-getMonthNumber(month: string): string {
-    const months = {
-        Jan: '01', Feb: '02', Mar: '03', Apr: '04',
-        May: '05', Jun: '06', Jul: '07', Aug: '08',
-        Sep: '09', Oct: '10', Nov: '11', Dec: '12'
-    };
-    return months[month];
-}
 
 
 
@@ -113,7 +92,15 @@ getMonthNumber(month: string): string {
     // Validate page number
     if (pageNumber >= 1 && pageNumber <= this.totalPages) {
       this.currentPage = pageNumber;
+      // Adjust filtered collaborators based on current page
+      const startIndex = (this.currentPage - 1) * this.entriesPerPage;
+      const endIndex = Math.min(startIndex + this.entriesPerPage, this.collaborateurs.length);
+      this.filteredCollaborateurs = this.collaborateurs.slice(startIndex, endIndex).map(collaborateur => this.mapCollaborateur(collaborateur));
     }
+  }
+  
+  generatePages(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
   getEntriesForPage() {
@@ -123,9 +110,7 @@ getMonthNumber(month: string): string {
     // Return entries for current page
     return this.collaborateurs.slice(startIndex, endIndex);
   }
-  generatePages(): number[] {
-    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
-  }
+ 
   viewCollaborateur(collaborateur: any) {
     // Fetch detailed collaborateur data using collaborateur.Id
     axios.get(`http://localhost:8090/api/v1/Collaborateurs/${collaborateur.Id}`)
@@ -136,10 +121,7 @@ getMonthNumber(month: string): string {
      // Function to format date
     
 
-     // Format date fields
-     detailedCollaborateur.date_entree = this.formatDate(detailedCollaborateur.date_entree);
-     detailedCollaborateur.date_naissance = this.formatDate(detailedCollaborateur.date_naissance);
-     
+  
      console.log(detailedCollaborateur.date_entree);
 
         Swal.fire({
@@ -527,6 +509,12 @@ getMonthNumber(month: string): string {
   }
 
   editCollaborateur(collaborateur): void {
+    const convertISODateToHTMLDate = (isoDate: string): string => {
+      if (!isoDate) return ''; // Return empty string if isoDate is null or undefined
+      // Split the ISO date string at the "T" character to separate date and time
+      const datePart = isoDate.split('T')[0];
+      return datePart; // Return only the date part
+  };
     Swal.fire({
       title: 'Edit Collaborateur',
       html: `
@@ -641,6 +629,7 @@ getMonthNumber(month: string): string {
         }
       </style>
     </head>
+    
         <div class="form-card">
           <div class="form-card-header">Information Personnelle</div>
           <div class="form-card-body">
@@ -672,9 +661,9 @@ getMonthNumber(month: string): string {
               <input id="age" type="number" class="form-control" placeholder="Entrez l'âge" value="${collaborateur.Age}">
             </div>
             <div>
-              <label for="date_naissance" class="form-label">Date de naissance:</label>
-              <input id="date_naissance" type="date" class="form-control" placeholder="Entrez la date de naissance" value="${this.formatDate(collaborateur.DateNaissance).split('T')[0]}">
-              </div>          
+            <label for="date_naissance" class="form-label">Date de naissance:</label>
+            <input id="date_naissance" type="date" class="form-control" placeholder="${collaborateur.DateNaissance.split('T')[0]}">
+        </div>      
           </div>
         </div>
         <div class="form-card">
@@ -702,7 +691,8 @@ getMonthNumber(month: string): string {
             </div>
             <div>
               <label for="date_entree" class="form-label">Date d'entrée:</label>
-              <input id="date_entree" type="date" class="form-control" placeholder="Entrez la date d'entrée" value="${this.formatDate(collaborateur.DateEntree).split('T')[0]}">
+              <input id="date_entree" type="date" class="form-control" placeholder="Entrez la date d'entrée" value="${convertISODateToHTMLDate(collaborateur.DateEntree)}">
+              
             </div>
             <div>
               <label for="anciennete" class="form-label">Ancienneté:</label>
@@ -713,6 +703,7 @@ getMonthNumber(month: string): string {
       `,
       showCancelButton: true,
       focusConfirm: false,
+     
       preConfirm: () => {
         // Retrieve input values and update collaborateur object
         const nom = (<HTMLInputElement>document.getElementById('nom')).value;
@@ -729,7 +720,11 @@ getMonthNumber(month: string): string {
     const fonction = (<HTMLInputElement>document.getElementById('fonction')).value;
     const date_entree = (<HTMLInputElement>document.getElementById('date_entree')).value;
     const ancienneté = (<HTMLInputElement>document.getElementById('anciennete')).value;
-
+    if (!nom || !prenom || !cin || !sexe || !nationalité || !age || !date_naissance ||
+      !categorie || !filiale || !type || !département || !fonction || !date_entree || !ancienneté) {
+      Swal.showValidationMessage('Veuillez remplir tous les champs.');
+      return false; // Prevent form submission if any field is empty
+  }  
       
         const editCollaborateur = {
           nom: nom,

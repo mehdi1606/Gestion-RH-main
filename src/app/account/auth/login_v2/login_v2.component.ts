@@ -1,39 +1,33 @@
 import { Component } from '@angular/core';
 import axios from 'axios';
-import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { AuthenticationService } from '../../../../app/core/services/auth.service';
 
 @Component({
   selector: 'app-login-v2',
-  
   templateUrl: './login_v2.component.html',
   styleUrls: ['./login_v2.component.scss'] // Corrected property name to styleUrls
 })
-export  class LoginComponent1 {
+// Assume imports and @Component decorator are already provided
+export class LoginComponent1 {
+  email: string ;
+  password: string ;
 
-  emails: string = '';
-  passwords: string = '';
+  constructor(private authService: AuthenticationService) {}
 
-  constructor(private router: Router) {}
-
-  async loginUser() {
-    try {
-      console.log('Email:', this.emails);
-      console.log('Password:', this.passwords);
-
-      const response = await axios.post('http://localhost:8090/api/v1/auth/login', null, {
-        params: {
-          email: this.emails,
-          password: this.passwords
-        }
-      });
-      console.log('Response:', response);
-      console.log('Login successful:', response.data);
-      alert('Login succeed');
-      this.router.navigate(['/dashboard']);
-
-    } catch (error) {
-      console.error('Login failed:', error);
+// LoginComponent
+async login(): Promise<void> {
+  try {
+    const user = await this.authService.loginUser(this.email, this.password);
+    console.log('Login successful', user);
+  } catch (error) {
+    console.error('Login failed', error);
+    if (error.response && error.response.status === 401) {
+      // Handle 401 specifically if needed
+      alert('Login failed: Unauthorized. Check your credentials.');
+    } else {
+      alert('Login failed: An error occurred.');
     }
   }
 }
+}
+
