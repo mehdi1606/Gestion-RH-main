@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private baseUrl = 'https://gestionrh-0d9m.onrender.com/api/v1/auth';  // Adjust this URL to your backend
+  private baseUrl = 'https://gestionrh-0d9m.onrender.com/api/v1/auth/login';  // Adjust this URL to your backend
 
   constructor(private router: Router,private activatedRoute: ActivatedRoute) {}
 

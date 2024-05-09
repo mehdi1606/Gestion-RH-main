@@ -46,7 +46,7 @@ export class CollaborateurComponent {
 
   fetchCollaborateurs(): void {
 
-    axios.get('http://localhost:8090/api/v1/Collaborateurs')
+    axios.get('https://gestionrh-0d9m.onrender.com/api/v1/Collaborateurs')
       .then(response => {
         console.log('API Response:', response.data); // Log the entire response
         this.collaborateurs = response.data;
