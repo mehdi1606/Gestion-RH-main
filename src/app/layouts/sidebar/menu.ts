@@ -68,7 +68,7 @@ export const MENU: MenuItem[] = [
       id: 6,
       label: 'List notification',
       icon: 'bx-bell',
-      link: '/notification',
+      
   },
   // {
   //           id: 40,
